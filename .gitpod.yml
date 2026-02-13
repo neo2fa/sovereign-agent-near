@@ -1,0 +1,22 @@
+image: gitpod/workspace-full:latest
+
+tasks:
+  - init: |
+      echo "Setting up Rust target..."
+      rustup target add wasm32-unknown-unknown
+      echo "Installing NEAR CLI..."
+      npm install -g near-cli
+      echo "Installing frontend dependencies..."
+      cd frontend
+      npm install
+  - command: |
+      echo "Building NEAR contract..."
+      cd contracts/agent_registry
+      cargo build --target wasm32-unknown-unknown --release
+  - command: |
+      echo "Frontend server starting..."
+      cd frontend
+      npm run dev
+ports:
+  - port: 3000
+    onOpen: open-preview
